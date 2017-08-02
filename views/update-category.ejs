@@ -1,0 +1,60 @@
+<!--头部-->
+<%- include frame/header.ejs  %>
+<!--右侧菜单-->
+<%- include frame/menu.ejs %>
+<!--主要内容-->
+<!--主要内容 报告-->
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-lg-10 col-md-offset-2 main" id="main">
+    <h1 class="page-header">修改栏目</h1>
+    <form id="gx" action="/Category/update" method="post">
+        <div class="form-group">
+            <label for="category-name">栏目名称</label>
+            <input type="hidden" name="tid" value="<%= tid %>">
+            <input type="text" id="category-name" name="name" value="<%= name %>" class="form-control" placeholder="在此处输入栏目名称" required autocomplete="off">
+            <span class="prompt-text">这将是它在站点上显示的名字。</span> </div>
+        <div class="form-group">
+            <label for="category-alias">栏目别名</label>
+            <input type="text" id="category-alias" name="alias" value="" class="form-control" placeholder="在此处输入栏目别名" required autocomplete="off">
+            <span class="prompt-text">“别名”是在URL中使用的别称，它可以令URL更美观。通常使用小写，只能包含字母，数字和连字符（-）。</span> </div>
+        <div class="form-group">
+            <label for="category-keywords">关键字</label>
+            <input type="text" id="category-keywords" name="keywords" value="" class="form-control" placeholder="在此处输入栏目关键字" autocomplete="off">
+            <span class="prompt-text">关键字会出现在网页的keywords属性中。</span> </div>
+        <div class="form-group">
+            <label for="category-describe">描述</label>
+            <textarea class="form-control" id="category-describe" name="describe" rows="4" autocomplete="off"></textarea>
+            <span class="prompt-text">描述会出现在网页的description属性中。</span> </div>
+        <button class="btn btn-primary" type="submit" name="submit" id="submit">更新</button>
+    </form>
+</div>
+<!--个人信息模态框-->
+<%- include frame/UserInformation.ejs %>
+<!--个人登录记录模态框-->
+<%- include frame/UserRecord.ejs %>
+<!--微信二维码模态框-->
+<%- include frame/2wm.ejs %>
+<!--提示模态框-->
+<%-include frame/Prompt.ejs %>
+<!--脚部-->
+<%- include frame/footer.ejs %>
+<script>
+    $(function () {
+        $("#submit").on('click',(e)=>{
+            e.preventDefault();
+            console.log($('#gx').serialize())
+            $.ajax({
+                type:"POST",
+                url:"/index/update-category",
+                data:$('#gx').serialize(),
+                success:res=>{
+                    if(res.status === 0){
+                        alert("修改成功");
+                        location.href='/index/category'
+                    }else {
+                        alert("数据获取失败")
+                    }
+                }
+            })
+        })
+    })
+</script>

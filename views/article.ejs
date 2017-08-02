@@ -1,0 +1,89 @@
+<!--头部-->
+<%- include frame/header.ejs  %>
+<!--右侧菜单-->
+<%- include frame/menu.ejs %>
+<!--主要内容 文章列表-->
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-lg-10 col-md-offset-2 main" id="main">
+    <form id="forms" action="/Article/checkAll" method="post" >
+        <h1 class="page-header">操作</h1>
+        <ol class="breadcrumb">
+            <li><a href="/index/add-article">增加文章</a></li>
+        </ol>
+        <h1 class="page-header">管理 <span class="badge">7</span></h1>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th><span class="glyphicon glyphicon-th-large"></span> <span class="visible-lg">选择</span></th>
+                    <th><span class="glyphicon glyphicon-file"></span> <span class="visible-lg">标题</span></th>
+                    <th><span class="glyphicon glyphicon-list"></span> <span class="visible-lg">栏目</span></th>
+                    <th class="hidden-sm"><span class="glyphicon glyphicon-tag"></span> <span class="visible-lg">标签</span></th>
+                    <th><span class="glyphicon glyphicon-time"></span> <span class="visible-lg">日期</span></th>
+                    <th><span class="glyphicon glyphicon-pencil"></span> <span class="visible-lg">操作</span></th>
+                </tr>
+                </thead>
+                <tbody>
+                <% for(let i=0;i<article.length;i++){ %>
+                <tr>
+                    <td><input type="checkbox" class="input-control" name="checkbox" value="<%= article[i]._id %>" /></td>
+                    <td class="article-title"><%= article[i].title %></td>
+                    <td><%= article[i].category.alias %></td>
+                    <td class="hidden-sm"><%= article[i].tags %></td>
+                    <td><%= article[i].time %></td>
+                    <td><a href="/index/update-article?tid=<%= article[i]._id %>">修改</a> <a href="/index/remove-article?tid=<%= article[i]._id %>">删除</a></td>
+                </tr>
+                <% } %>
+                </tbody>
+            </table>
+        </div>
+        <footer class="message_footer">
+            <nav>
+                <div class="btn-toolbar operation" role="toolbar">
+                    <div class="btn-group" role="group"> <a class="btn btn-default" onClick="select()">全选</a> <a class="btn btn-default" onClick="reverse()">反选</a> <a class="btn btn-default" onClick="noselect()">不选</a> </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" id="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="删除全部选中" name="checkbox_delete">删除</button>
+                    </div>
+                </div>
+                <ul class="pagination pagenav">
+                    <li class="disabled"><a aria-label="Previous"> <span aria-hidden="true">&laquo;</span> </a> </li>
+                    <% for (let i=0;i<Math.ceil(n/4);i++){%>
+                        <li><a href="/index/article?start=<%= i*4 %>"><%= i+1 %></a></li>
+                    <% }%>
+                    <li><a href="#" aria-label="Next"> <span aria-hidden="true">&raquo;</span> </a> </li>
+                </ul>
+            </nav>
+        </footer>
+    </form>
+</div>
+<!--个人信息模态框-->
+<%- include frame/UserInformation.ejs %>
+<!--个人登录记录模态框-->
+<%- include frame/UserRecord.ejs %>
+<!--微信二维码模态框-->
+<%- include frame/2wm.ejs %>
+<!--提示模态框-->
+<%-include frame/Prompt.ejs %>
+<!--脚部-->
+<%- include frame/footer.ejs %>
+
+<script>
+    $(function () {
+        $('#button').on('click',_=>{
+            $.ajax({
+                url:'/index/remove-article',
+                type:'GET',
+                data:$('#forms').serialize(),
+                success:res=>{
+                    if(res.status === 0){
+                        alert("删除成功")
+                        location.href='/index/article'
+                    }else {
+                        alert("请稍后重试")
+                    }
+
+                },
+            })
+
+        })
+    })
+</script>
